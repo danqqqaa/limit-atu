@@ -4,10 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "server": "pnpm --filter server-limit dev",
     "client": "pnpm --filter client-limit dev",
-    "backend": "pnpm run start:dev:mmkmetiz"
+    "dev": "pnpm --filter \"./apps/**\" dev"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@trpc/server": "^10.45.2"
+  }
 }
