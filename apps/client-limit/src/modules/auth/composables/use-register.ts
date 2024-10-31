@@ -1,4 +1,4 @@
-import { useTRPC } from "@/trpc-client";
+import { useTRPC } from "@/shared/composables/use-trpc";
 import { useMutation } from "@tanstack/vue-query";
 import { registerSchemaType } from "z-limit";
 
@@ -9,4 +9,4 @@ export function useRegister() {
         mutationKey: ['register'],
         mutationFn: (props: registerSchemaType) => trpc.auth.register.mutate(props)
     })
-}
+}   
