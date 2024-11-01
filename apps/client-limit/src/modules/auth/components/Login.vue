@@ -5,17 +5,19 @@
   import Button from '@/shared/ui/button/Button.vue'
   import { Eye, EyeOff } from 'lucide-vue-next'
   import { useLogin } from '../composables/use-login'
-  import { useAuthService } from '@/shared/composables/use-auth-service'
-  const passwordVisible = ref(false)
+  import { validateSchema } from '@/shared/validate-schemas'
+  import { loginSchema } from 'z-limit'
 
-  const useAuthServiceInject = useAuthService()
+  const passwordVisible = ref(false)
 
   const loginForm = ref({
     login: '',
     password: ''
   })
 
-  const login = async () => await useLogin(toValue(loginForm), useAuthServiceInject)
+  const { mutate } = useLogin(toValue(loginForm))
+
+  const login = () => (validateSchema(loginSchema, toValue(loginForm)) ? mutate() : '')
 </script>
 
 <template>
