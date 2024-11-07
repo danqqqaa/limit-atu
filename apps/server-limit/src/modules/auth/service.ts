@@ -1,5 +1,5 @@
 import { registerSchemaType, loginSchemaType } from "z-limit";
-import { db, eq, user } from "db-limit";
+import { db, eq, user, userCredentials } from "db-limit";
 import { jwtConfig } from "../../config";
 // import { TRPCError } from "@trpc/server";
 import {
@@ -11,29 +11,29 @@ import {
   importSPKI,
   jwtVerify,
 } from "jose";
+import { TRPCError } from "@trpc/server";
+import { hashSync, compareSync } from "bcryptjs";
 
 export class AuthService {
   public async register(dto: registerSchemaType) {
     await db.transaction(async (tx) => {
       try {
-        const [tempUser] = await tx
-          .select()
-          .from(user)
-          .where(eq(user.name, dto.name));
+        const [insertedUser] = await tx
+          .insert(user)
+          .values({
+            login: dto.login,
+          })
+          .returning();
 
-        // if (tempUser.length > 0) {
-        //   throw new TRPCError({code: "BAD_REQUEST", message: "Пользователь с таким именем уже существует"});
-        // }
+        const insertedUserCredentials = await tx
+          .insert(userCredentials)
+          .values({
+            user_id: insertedUser.id,
+            payload: hashSync(dto.password),
+          })
+          .returning();
 
-        // const newUser = await tx.insert(user).values(dto).returning();
-        // console.log(tempUser);
-        // this.generateKeys()
-
-        const test = await this.generateToken(tempUser.id);
-        console.log(test);
-
-        // this.verifyRefresh(test.refresh);
-        // return this.generateToken(tempUser.id);
+        console.log(insertedUserCredentials);
       } catch (error) {
         console.log(error);
         tx.rollback();
@@ -48,7 +48,24 @@ export class AuthService {
       .where(eq(user.login, dto.login));
 
     if (!loggedUser) {
-      throw new Error("Пользователь не найден");
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Пользователь не найден",
+      });
+    }
+
+    const [userCred] = await db
+      .select()
+      .from(userCredentials)
+      .where(eq(userCredentials.user_id, loggedUser.id));
+
+    const isValidPass = compareSync(dto.password, userCred.payload);
+
+    if (!isValidPass) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Пароль не подходит",
+      });
     }
 
     return this.generateToken(loggedUser.id);
@@ -105,12 +122,20 @@ export class AuthService {
   }
 
   public async refreshTokens(refresh: string) {
-    // const { publicAccess , privateAccess, publicRefresh, privateRefresh } = await this.generateKeys()
-    // console.log(publicAccess , privateAccess, publicRefresh, privateRefresh);
-
+    const getExpiresTime = (exp: number) => {
+      return exp * 1000 - Date.now();
+    };
+    // cделать отправку невалидных токенов в redis
     const decodedRefresh = await this.verifyRefresh(refresh);
 
-    console.log(decodedRefresh);
+    if (getExpiresTime(decodedRefresh.exp!) < 0) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Refresh token expired",
+      });
+    }
+
+    return this.generateToken(+decodedRefresh.sub!);
   }
 
   // @ts-ignore
