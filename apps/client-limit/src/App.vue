@@ -1,19 +1,14 @@
 <script setup lang="ts">
   import { RouterView } from 'vue-router'
   import Toaster from '@/shared/ui/toast/Toaster.vue'
-  import { onMounted } from 'vue'
-  import { useAuthStore } from '@/shared/stores/auth/auth-store'
-
-  const { getCurrentUser } = useAuthStore()
-
-  onMounted(() => {
-    getCurrentUser()
-  })
+  // import Layout from './layouts/Layout.vue'
 </script>
 
 <template>
-  <Toaster />
-  <RouterView />
+  <!-- <Layout> -->
+    <Toaster />
+    <RouterView />
+  <!-- </Layout> -->
 </template>
 
 <style scoped></style>

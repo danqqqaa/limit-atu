@@ -17,3 +17,13 @@ export const userCredentials = pgTable('userCredentials', {
   payload: varchar("payload", { length: 255 }).notNull(),
   updated_at: timestamp("updated_at").defaultNow(),
 })
+
+export const limit = pgTable("limit", {
+  id: serial("id").primaryKey(),
+  year: integer("year"),
+  month: integer("month"),
+  used: integer("used"),
+  limit: integer("limit"),
+  idTableLimits: integer("idTableLimits"),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
