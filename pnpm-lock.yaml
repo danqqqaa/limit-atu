@@ -117,9 +117,6 @@ importers:
       '@trpc/server':
         specifier: ^10.45.2
         version: 10.45.2
-      '@types/bcrypt':
-        specifier: ^5.0.2
-        version: 5.0.2
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -1052,9 +1049,6 @@ packages:
 
   '@tsconfig/node20@20.1.4':
     resolution: {integrity: sha512-sqgsT69YFeLWf5NtJ4Xq/xAF8p4ZQHlmGW74Nu2tD4+g5fAsposc4ZfaaPixVu4y01BEiDCWLRDCvDM5JOsRxg==}
-
-  '@types/bcrypt@5.0.2':
-    resolution: {integrity: sha512-6atioO8Y75fNcbmj0G7UjI9lXN2pQ/IGJ2FWT4a/btd0Lk9lQalHLKhkgKVZ3r+spnmWUKfbMi1GEe9wyHQfNQ==}
 
   '@types/bcryptjs@2.4.6':
     resolution: {integrity: sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==}
@@ -3112,10 +3106,6 @@ snapshots:
   '@tsconfig/node16@1.0.4': {}
 
   '@tsconfig/node20@20.1.4': {}
-
-  '@types/bcrypt@5.0.2':
-    dependencies:
-      '@types/node': 20.16.11
 
   '@types/bcryptjs@2.4.6': {}
 

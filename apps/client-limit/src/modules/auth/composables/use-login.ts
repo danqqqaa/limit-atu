@@ -15,7 +15,7 @@ export function useLogin(props: loginSchemaType) {
     mutationFn: () => trpc.auth.login.mutate(props),
     onSuccess: ({refresh, access}) => {
       authStore.setTokens(refresh, access)
-      router.push('/home')
+      router.push('/users')
     },
     onError: (err) => {
       showToast({

@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { router as authRouter } from '@/modules/auth/router'
 import { router as userRouter } from '@/modules/users/router'
+import { router as limitRouter } from '@/modules/limits/router'
 
-const routes = [...authRouter, ...userRouter]
+const routes = [...authRouter, ...userRouter, ...limitRouter]
 
 console.log(routes);
 

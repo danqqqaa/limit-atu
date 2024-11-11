@@ -13,3 +13,13 @@ export const authProcedure = t.procedure.use((opts) => {
     },
   });
 });
+
+export const limitProcedure = t.procedure.use((opts) => {
+
+
+  return opts.next({
+    ctx: {
+     
+    },
+  });
+});
