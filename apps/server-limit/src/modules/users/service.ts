@@ -1,7 +1,7 @@
-import { db, eq, user } from "db-limit";
+import { db, user } from "db-limit";
 
 export class UserService {
-  async getUsers(ctx: number): Promise<unknown> {
+  async getUsers(): Promise<unknown> {
     try {
       const users = await db.select().from(user);
 
@@ -10,11 +10,11 @@ export class UserService {
       // console.log(error.message);
     }
   }
-
-  async getCurrentUser(ctx: number): Promise<unknown> {
+  async getCurrentUser() {
     try {
-      const [currentUser] = await db.select().from(user).where(eq(user.id, ctx));
-      return currentUser;
+      // const [currentUser] = await db.select().from(user).where(eq(user.id, ctx));
+      // return currentUser;
+      return {}
     } catch (error) {
       // console.log(error.message);
     }

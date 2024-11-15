@@ -5,17 +5,12 @@ import { router as userRouter } from '@/modules/users/router'
 import { router as limitRouter } from '@/modules/limits/router'
 import Layout from '@/layouts/Layout.vue'
 import { Component } from 'vue'
-import { Bug } from 'lucide-vue-next'
+
+// const { currentUser } = useAuthStore()
 
 type _RouteRecord = RouteRecordRaw & {
   componentIcon?: Component
   redirect?: string
-}
-
-const testRoute = {
-  path: '',
-  componentIcon: Bug,
-  name: 'Информация'
 }
 
 const routes = [
@@ -23,15 +18,15 @@ const routes = [
   {
     path: '/',
     component: Layout,
-    children: [...userRouter, testRoute, ...limitRouter]
+    children: [...userRouter]
   }
 ] as _RouteRecord[]
+
+export const sidebarRoutes = routes.flatMap(
+  (route: _RouteRecord) => route.children || []
+) as _RouteRecord[]
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [...routes, { path: '/:pathMatch(.*)*', redirect: '/' }]
 })
-
-export const pageRoutes = routes.flatMap(
-  (route: _RouteRecord) => route.children || []
-) as _RouteRecord[]
