@@ -13,3 +13,13 @@ export const privateProcedure = t.procedure.use((opts) => {
   
   return opts.next()
 });
+
+export const limitProcedure = t.procedure.use((opts) => {
+
+
+  return opts.next({
+    ctx: {
+     
+    },
+  });
+});

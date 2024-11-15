@@ -14,8 +14,10 @@
 </script>
 
 <template>
-  <Toaster />
-  <RouterView />
+  <!-- <Layout> -->
+    <Toaster />
+    <RouterView />
+  <!-- </Layout> -->
 </template>
 
 <style scoped></style>

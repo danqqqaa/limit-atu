@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { RouteRecordRaw } from 'vue-router'
 import { router as authRouter } from '@/modules/auth/router'
 import { router as userRouter } from '@/modules/users/router'
+import { router as limitRouter } from '@/modules/limits/router'
 import Layout from '@/layouts/Layout.vue'
 import { Component } from 'vue'
 
