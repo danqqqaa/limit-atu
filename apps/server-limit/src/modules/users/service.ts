@@ -1,24 +1,25 @@
-import { db, user } from "db-limit";
+import type { Context } from "@/trpc/context";
+import { fetchData } from "../../services/fetch";
+import { itmConfig } from "../../config/itm.config";
+import { TRPCError } from "@trpc/server";
 
 export class UserService {
-  async getUsers(): Promise<unknown> {
+  async getOrganizations(ctx: Context): Promise<unknown> {
     try {
-      const users = await db.select().from(user);
-
-      return users;
-    } catch (error) {
-      // console.log(error.message);
-    }
-  }
-  async getCurrentUser() {
-    try {
-      // const [currentUser] = await db.select().from(user).where(eq(user.id, ctx));
-      // return currentUser;
-      return {}
-    } catch (error) {
-      // console.log(error.message);
+      const data = await fetchData({
+        url: itmConfig.getOrganization,
+        body: {},
+        method: "GET",
+        token: ctx.token,
+      });
+      return data
+    } catch (error: any) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: error.message,
+      })
+     
     }
   }
 }
-
 export const userService = new UserService();

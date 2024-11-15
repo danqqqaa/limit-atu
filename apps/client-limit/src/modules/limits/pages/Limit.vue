@@ -10,7 +10,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/shared/ui/table'
+} from '@/shared/components/ui/table'
 const dataTest = [
     {
         id: 1,

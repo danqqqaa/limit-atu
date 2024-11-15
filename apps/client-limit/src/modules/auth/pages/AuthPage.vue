@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import Login from '@/modules/auth/components/Login.vue'
-  import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
+  import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import { useToast } from '@/shared/ui/toast'
+import { useToast } from '@/shared/components/ui/toast'
 
 type Toast = {
     title: string,

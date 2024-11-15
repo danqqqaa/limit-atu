@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { Input } from '@/shared/ui/input'
+  import { Input } from '@/shared/components/ui/input'
   import { ref } from 'vue'
-  import Button from '@/shared/ui/button/Button.vue'
+  import Button from '@/shared/components/ui/button/Button.vue'
   import { Eye, EyeOff } from 'lucide-vue-next'
   import { useLogin } from '../composables/use-login'
   import { loginSchema } from 'z-limit'
@@ -14,8 +14,8 @@
     FormItem,
     FormLabel,
     FormMessage
-  } from '@/shared/ui/form'
-import Skeleton from '@/shared/ui/skeleton/skeleton.vue'
+  } from '@/shared/components/ui/form'
+import Skeleton from '@/shared/components/ui/skeleton/skeleton.vue'
   const passwordVisible = ref(false)
 
   const loginForm = ref({
