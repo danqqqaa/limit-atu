@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { RouterView } from 'vue-router'
-  import Toaster from '@/shared/ui/toast/Toaster.vue'
+  import Toaster from '@/shared/components/ui/toast/Toaster.vue'
   import { useAuthStore } from '@/shared/stores/auth/auth-store'
   
   import { router } from '@/shared/router'

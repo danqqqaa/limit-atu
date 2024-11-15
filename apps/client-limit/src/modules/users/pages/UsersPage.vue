@@ -1,10 +1,17 @@
 <script setup lang="ts">
-console.log('imhere');
+  import { Page } from '@/shared/components/page'
+  import { getOrganizations } from '../composables/get-organizions'
+  import Skeleton from '@/shared/components/ui/skeleton/skeleton.vue'
+  const { data, isLoading } = getOrganizations()
 
+  console.log(data)
 </script>
 
 <template>
-  <div class="w-full h-screen flex items-center justify-center">
-    312321321
-  </div>
+  <Page>
+    <div v-if="isLoading">
+      <Skeleton class="w-[1000px] h-[200px]" />
+    </div>
+    <div v-else>{{ JSON.stringify(data, null, 10) }}</div>
+  </Page>
 </template>

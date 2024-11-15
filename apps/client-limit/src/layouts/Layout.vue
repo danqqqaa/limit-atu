@@ -53,6 +53,6 @@
       </div>
     </aside>
 
-    <router-view />
+    <router-view class="pt-20 pl-64 ml-4"/>
   </main>
 </template>

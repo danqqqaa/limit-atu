@@ -11,7 +11,7 @@
     },
     "framework": "vite",
     "aliases": {
-      "components": "@/shared/ui",
+      "components": "@/components/shared/ui",
       "utils": "@/lib/utils"
     }
   }

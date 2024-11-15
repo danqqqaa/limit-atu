@@ -4,7 +4,7 @@ import { config } from '@/config/config'
 import { useAuthStore } from '../stores/auth/auth-store'
 
 export function useTRPC() {
-  const { getToken } = useAuthStore()
+  const { getToken, getUser } = useAuthStore()
 
   return createTRPCProxyClient<AppRouter>({
     links: [
@@ -13,9 +13,10 @@ export function useTRPC() {
         async headers() {
           const headers: Record<string, string> = {}
           const token = getToken()
-          
+          const user = getUser()
           if (token) {
             headers['Authorization'] = `Bearer ${token}`
+            headers['user'] = `${user}`
           }
           return headers
         },

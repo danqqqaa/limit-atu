@@ -1,8 +1,16 @@
-import axios, { AxiosBasicCredentials } from "axios";
+import axios, { AxiosBasicCredentials, Method } from "axios";
 
-export async function fetchData(url: string, body: BodyInit) {
+export async function fetchDataAuth(props: {
+  url: string;
+  body: Object;
+  method: Method;
+}) {
   try {
-    const response = await axios.post(url, body, {
+    const { url, body, method } = props;
+    const response = await axios({
+      url,
+      data: JSON.stringify(body),
+      method,
       headers: {
         "Content-Type": "application/json",
       },
@@ -15,6 +23,38 @@ export async function fetchData(url: string, body: BodyInit) {
     });
     return response.data;
   } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchData(props: {
+  url: string;
+  body: Object;
+  method: Method;
+  token: string | undefined;
+}) {
+  try {
+    const { url, body, method, token } = props;
+
+    const response = await axios({
+      url,
+      data: JSON.stringify(body),
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        apiKey: token,
+        "Content-Length": '0'
+      },
+
+      proxy: {
+        protocol: "http",
+        host: "proxy.hq.corp.mmk.chel.su",
+        port: 8080,
+        auth: "shinkarenko184184:Pasha007!" as unknown as AxiosBasicCredentials,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
     console.log(error);
   }
 }
