@@ -3,14 +3,14 @@ import { userService } from "./service";
 
 export const userRouter = router({
   getUsers: privateProcedure.query(async (op) => {
-    const { ctx } = op;
+    // const { ctx } = op;
         
-    return await userService.getUsers(ctx.userId);
+    return await userService.getUsers();
   }),
 
   getCurrentUser: privateProcedure.query(async (op) => {
-    const { ctx } = op;
+    // const { ctx } = op;
         
-    return await userService.getCurrentUser(ctx.userId);
+    return await userService.getCurrentUser();
   }),
 });

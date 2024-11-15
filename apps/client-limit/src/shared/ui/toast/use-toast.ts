@@ -120,7 +120,7 @@ function dispatch(action: Action) {
       break
   }
 }
-
+//@ts-ignore
 function useToast() {
   return {
     toasts: computed(() => state.value.toasts),

@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import { sidebarRoutes } from '@/shared/router'
+  import { useAuthStore } from '@/shared/stores/auth/auth-store';
 
+  const { getUser } = useAuthStore()
+  console.log(getUser());
+  
 </script>
 
 <template>
@@ -19,7 +23,7 @@
           </div>
           <div class="flex items-center">
             <div class="flex items-center ms-3">
-              <div>тут что-то будет</div>
+              <div>Имя пользователя: {{ getUser() }}</div>
             </div>
           </div>
         </div>

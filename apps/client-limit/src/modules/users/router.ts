@@ -6,7 +6,7 @@ export const router = [
     {
         path: '/users',
         component: UserPage,
-        name: 'Пользователи',
+        name: 'users',
         onLayout: true,
         componentIcon: Users 
     }

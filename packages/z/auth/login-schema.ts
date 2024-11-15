@@ -1,8 +1,22 @@
 import { z } from "zod";
 
 export const schema = z.object({
-  login: z.string().trim().min(1, { message: "Введите логин" }),
-  password: z.string().trim().min(1, { message: "Введите Пароль" }),
+  username: z.string().trim().refine(
+    (value) => {
+      return value.length >= 3
+    },
+    {
+      message: "Логин должен быть от 3 символов",
+    }
+  ),
+  password: z.string().trim().refine(
+    (value) => {
+      return value.length >= 3
+    },
+    {
+      message: "Пароль должен быть от 3 символов",
+    }
+  ),
 });
 
 export type schemaType = z.infer<typeof schema>;
