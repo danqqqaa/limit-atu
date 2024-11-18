@@ -18,7 +18,7 @@ const routes = [
   {
     path: '/',
     component: Layout,
-    children: [...userRouter]
+    children: [...userRouter, ...limitRouter]
   }
 ] as _RouteRecord[]
 

@@ -61,12 +61,28 @@ function getLimits() {
         queryKey: ['limits'],
     })
 }
+function getCronMvz() {
+    return useQuery({
+        queryFn: () => trpc.cron.getMvz.query(),
+        queryKey: ['mvz'],
+    })
+}
+function getCronSubdivisions() {
+    return useQuery({
+        queryFn: () => trpc.cron.getSubdivisions.query(),
+        queryKey: ['subdivisions'],
+    })
+}
 const { data } = getLimits();
+const cronMvz = getCronMvz();
+const cronSubdivisions = getCronSubdivisions();
 </script>
 
 <template>
     <div class="w-full ">
-        {{ data }}
+        {{ cronMvz.data.value?.entries }}
+        <br>
+        {{ cronSubdivisions.data.value?.entries }}
         <Table>
             <TableCaption>Таблица лимитов</TableCaption>
             <TableHeader>

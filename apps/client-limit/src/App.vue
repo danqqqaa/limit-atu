@@ -7,10 +7,10 @@
 
  const token = localStorage.getItem('TOKEN')
 
-  router.beforeEach((to, _, next) => {
-    if (to.name !== 'Авторизация' && !token) next({ name: 'Авторизация' })
-    else next()
-  })
+  // router.beforeEach((to, _, next) => {
+  //   if (to.name !== 'Авторизация' && !token) next({ name: 'Авторизация' })
+  //   else next()
+  // })
 </script>
 
 <template>

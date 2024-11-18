@@ -58,3 +58,23 @@ export async function fetchData(props: {
     console.log(error);
   }
 }
+
+export async function fetchDataGet(url: string) { //временно для пуша
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "apiKey": "9d9c222f8e0a85d5d2c400f05074db22"
+      },
+      proxy: {
+        protocol: "http",
+        host: "proxy.hq.corp.mmk.chel.su",
+        port: 8080,
+        auth: "shinkarenko184184:Pasha007!" as unknown as AxiosBasicCredentials,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
