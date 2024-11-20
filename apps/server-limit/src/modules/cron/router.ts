@@ -7,6 +7,7 @@ new CronJob(
   async function () {
     await cronService.updateMvz();
     await cronService.updateSubdivisions();
+    await cronService.updateLimits();
     console.log('Обновление таблиц кроном!');
   }, // onTick
   null, // onComplete

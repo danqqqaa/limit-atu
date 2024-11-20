@@ -26,7 +26,7 @@ const limitForm = ref({
 
 const onSubmitLimit = () => {
 
-    // trpc.cron.updateMvz.query(),
+    trpc.limit.updateLimit.query({ id: props.data.id, limit: limitForm.value.limit }),
 
 
   console.log('Form submitted!', limitForm.value.limit)

@@ -26,7 +26,8 @@ export const limit = pgTable("limit", {
   month: integer("month"),
   used: integer("used"),
   limit: integer("limit"),
-  idTableLimits: integer("idTableLimits"),
+  subdivisionId: integer("subdivision_id").references(() => subdivision.id),
+  mvzId: integer("mvz_id").references(() => mvz.id),
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
@@ -34,7 +35,7 @@ export const subdivision = pgTable("subdivision", {
   id: serial("id").primaryKey(),
   positionNumber: integer("positionNumber"),
   type: varchar("type"),
-  status: integer("name"),
+  status: integer("status"),
   name: varchar("name"),
   description: timestamp("description"),
   shortName: varchar("shortName"),
