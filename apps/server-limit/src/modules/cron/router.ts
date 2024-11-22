@@ -5,9 +5,9 @@ import { CronJob } from 'cron';
 new CronJob(
   '*/30 * * * * *', // cronTime
   async function () {
-    await cronService.updateMvz();
-    await cronService.updateSubdivisions();
-    await cronService.updateLimits();
+    // await cronService.updateMvz();
+    // await cronService.updateSubdivisions();
+    // await cronService.updateLimits();
     console.log('Обновление таблиц кроном!');
   }, // onTick
   null, // onComplete

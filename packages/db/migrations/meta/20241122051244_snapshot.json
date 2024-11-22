@@ -1,6 +1,6 @@
 {
-  "id": "6af0822f-9ac0-42e7-9b6f-231f7110a074",
-  "prevId": "2b074ce6-2e7d-4d58-8878-f296ff4e3b5d",
+  "id": "01d8202e-ba87-46df-88d8-5de29c2b994d",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -38,8 +38,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "idTableLimits": {
-          "name": "idTableLimits",
+        "subdivision_id": {
+          "name": "subdivision_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mvz_id": {
+          "name": "mvz_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -53,7 +59,34 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "limit_subdivision_id_subdivision_id_fk": {
+          "name": "limit_subdivision_id_subdivision_id_fk",
+          "tableFrom": "limit",
+          "tableTo": "subdivision",
+          "columnsFrom": [
+            "subdivision_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "limit_mvz_id_mvz_id_fk": {
+          "name": "limit_mvz_id_mvz_id_fk",
+          "tableFrom": "limit",
+          "tableTo": "mvz",
+          "columnsFrom": [
+            "mvz_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -134,6 +167,12 @@
         "type": {
           "name": "type",
           "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },

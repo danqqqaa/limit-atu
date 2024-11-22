@@ -8,7 +8,7 @@ export class UserService {
     try {
       const data = await fetchData({
         url: itmConfig.getOrganization,
-        body: {},
+        data: {},
         method: "GET",
         token: ctx.token,
       });

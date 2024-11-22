@@ -1,2 +1,0 @@
-ALTER TABLE "userCredentials" ADD PRIMARY KEY ("user_id");--> statement-breakpoint
-ALTER TABLE "userCredentials" ALTER COLUMN "payload" SET DEFAULT '$2a$10$bRMR.vPWum5UyHvEAeqx8.FJtPHkSfmwdqTN2DoJt.tWvIEjCYY1C';

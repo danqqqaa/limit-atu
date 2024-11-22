@@ -1,6 +1,7 @@
 // import { fetchDataGet } from "../../services/fetch";
 // import { TRPCError } from "@trpc/server";
 import { db, desc, mvz, subdivision, limit } from "db-limit";
+// import { fetchDataAuth } from "@/services/fetch";
 
 export class CronService {
   public async getMvz() {
@@ -55,6 +56,10 @@ export class CronService {
       if (insertData.length)
         await db.insert(limit).values(insertData).onConflictDoNothing();
     }
+  }
+
+  public async cronGetMvz() {
+    // const data = await fetchDataAuth()
   }
 }
 

@@ -1,1 +1,0 @@
-ALTER TABLE "subdivision" ADD COLUMN "status" integer;

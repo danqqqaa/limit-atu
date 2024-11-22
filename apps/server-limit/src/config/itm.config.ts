@@ -1,4 +1,7 @@
+
 export const itmConfig = {
-    auth: 'https://itm-dev.satellite-soft.ru/api/v2/external/security',
-    getOrganization: 'https://itm-dev.satellite-soft.ru/api/v2/external/data/cost_center',
+    base_url: 'https://itm-dev.satellite-soft/api/v2/external',
+    auth: '/security',
+    getOrganization: '/data/cost_center',
 }
+

@@ -1,95 +1,55 @@
 import axios, { AxiosBasicCredentials, Method } from "axios";
+import { itmConfig } from "../config/itm.config";
+import { mmkConfig } from "../config/mmk.config";
+
+async function useAxios(props: {
+  url: string;
+  data: unknown;
+  method: Method;
+  token: string | undefined;
+}) {
+  const { token, url, data, method } = props;
+  console.log(props);
+  
+  axios.defaults.baseURL = itmConfig.base_url;
+  axios.defaults.headers.common["Content-Type"] = "application/json";
+  axios.defaults.headers.common["Content-Length"] = 0;
+
+  if (token) axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  axios.defaults.proxy = {
+    protocol: "http",
+    host: "proxy.hq.corp.mmk.chel.su",
+    port: 8080,
+    auth: `${mmkConfig.mmk_login}:${mmkConfig.mmk_password}` as unknown as AxiosBasicCredentials,
+  };
+
+  
+  return await axios({ url, data, method });
+}
 
 export async function fetchDataAuth(props: {
   url: string;
-  body: Object;
+  data: Object;
   method: Method;
+  token: string | undefined;
 }) {
   try {
-    const { url, body, method } = props;
-    const response = await axios({
-      url,
-      data: JSON.stringify(body),
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      proxy: {
-        protocol: "http",
-        host: "proxy.hq.corp.mmk.chel.su",
-        port: 8080,
-        auth: "shinkarenko184184:Pasha007!" as unknown as AxiosBasicCredentials,
-      },
-    });
-    return response.data;
-  } catch (error) {
+    return await useAxios(props);
+  } catch (error: any) {
     console.log(error);
   }
 }
 
 export async function fetchData(props: {
   url: string;
-  body: Object;
+  data: Object;
   method: Method;
   token: string | undefined;
 }) {
   try {
-    const { url, body, method, token } = props;
-
-    const response = await axios({
-      url,
-      data: JSON.stringify(body),
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        apiKey: token,
-        "Content-Length": '0'
-      },
-
-      proxy: {
-        protocol: "http",
-        host: "proxy.hq.corp.mmk.chel.su",
-        port: 8080,
-        auth: "shinkarenko184184:Pasha007!" as unknown as AxiosBasicCredentials,
-      },
-    });
-    return response.data;
+    return await useAxios(props);
   } catch (error: any) {
-    console.log(error);
-  }
-}
-
-export async function fetchDataGet(url: string) { //временно для пуша
-  try {
-    const response = await axios.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-        "apiKey": "9d9c222f8e0a85d5d2c400f05074db22"
-      },
-      // proxy: {
-      //   protocol: "http",
-      //   host: "proxy.hq.corp.mmk.chel.su",
-      //   port: 8080,
-      //   auth: "shinkarenko184184:Pasha007!" as unknown as AxiosBasicCredentials,
-      // },
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function fetchDataPost(url: string, body: Object) { //временно для пуша
-  try {
-    const response = await axios.post(url, {
-      body,
-      headers: {
-        "Content-Type": "application/json",
-        "apiKey": "9d9c222f8e0a85d5d2c400f05074db22"
-      },
-    });
-    return response.data;
-  } catch (error) {
     console.log(error);
   }
 }

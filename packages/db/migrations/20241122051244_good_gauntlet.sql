@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS "subdivision" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"positionNumber" integer,
 	"type" varchar,
+	"status" integer,
 	"name" varchar,
 	"description" timestamp,
 	"shortName" varchar,
