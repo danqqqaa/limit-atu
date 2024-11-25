@@ -16,6 +16,7 @@
     FormMessage
   } from '@/shared/components/ui/form'
 import Skeleton from '@/shared/components/ui/skeleton/skeleton.vue'
+
   const passwordVisible = ref(false)
 
   const loginForm = ref({
@@ -50,6 +51,7 @@ import Skeleton from '@/shared/components/ui/skeleton/skeleton.vue'
       </FormField>
       <FormField name="password" v-slot="{ field: passwordField }">
         <FormItem>
+          
           <FormLabel>Пароль</FormLabel>
           <FormControl>
             <Input
@@ -57,16 +59,9 @@ import Skeleton from '@/shared/components/ui/skeleton/skeleton.vue'
               :type="passwordVisible ? 'text' : 'password'"
               v-bind="passwordField"
             ></Input>
-            <Button
-              variant="ghost"
-              size="icon"
-              class="absolute mt-6 right-0 top-0 text-muted-foreground bg-transparent hover:bg-transparent"
-              @click="passwordVisible = !passwordVisible"
-            >
-              <Eye v-if="!passwordVisible" />
-              <EyeOff v-else />
-            </Button>
+          
           </FormControl>
+          
           <FormDescription v-if="!loginForm.password">Введите пароль</FormDescription>
           <FormMessage v-else />
         </FormItem>

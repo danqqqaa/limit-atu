@@ -1,13 +1,13 @@
 import type { Context } from "@/trpc/context";
-import { fetchData } from "../../services/fetch";
+import { useAxios } from "../../services/fetch";
 import { itmConfig } from "../../config/itm.config";
 import { TRPCError } from "@trpc/server";
 
 export class UserService {
   async getOrganizations(ctx: Context): Promise<unknown> {
     try {
-      const data = await fetchData({
-        url: itmConfig.getOrganization,
+      const data = await useAxios({
+        url: itmConfig.getMvz,
         data: {},
         method: "GET",
         token: ctx.token,

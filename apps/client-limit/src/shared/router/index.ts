@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router'
 import { router as authRouter } from '@/modules/auth/router'
 import { router as userRouter } from '@/modules/users/router'
 import { router as limitRouter } from '@/modules/limits/router'
+import { router as cronRouter } from '@/modules/itmCron/router'
 import Layout from '@/layouts/Layout.vue'
 import { Component } from 'vue'
 
@@ -18,7 +19,7 @@ const routes = [
   {
     path: '/',
     component: Layout,
-    children: [...userRouter, ...limitRouter]
+    children: [...userRouter, ...limitRouter, ...cronRouter]
   }
 ] as _RouteRecord[]
 

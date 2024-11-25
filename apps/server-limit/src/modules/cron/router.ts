@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "../../trpc/trpc";
+import { router, publicProcedure, privateProcedure } from "../../trpc/trpc";
 import { cronService } from "./service";
 import { CronJob } from 'cron';
 
@@ -14,11 +14,11 @@ new CronJob(
   true, // start
 );
 export const cronRouter = router({
-  getMvz: publicProcedure.query(async (op) => {
-    return await cronService.getMvz();
+  getMvz: privateProcedure.mutation(async (op) => {
+    return await cronService.getMvz(op.ctx);
   }),
-  getSubdivisions: publicProcedure.query(async (op) => {
-    return await cronService.getSubdivisions();
+  getSubdivisions: privateProcedure.mutation(async (op) => {
+    return await cronService.getSubdivisions(op.ctx);
   }),
   updateMvz: publicProcedure.query(async (op) => {
     return await cronService.updateMvz();

@@ -1,54 +1,48 @@
-import axios, { AxiosBasicCredentials, Method } from "axios";
-import { itmConfig } from "../config/itm.config";
-import { mmkConfig } from "../config/mmk.config";
+import axios, { Method } from "axios";
+// import { itmConfig } from "../config/itm.config";
+// import { https } from 'https'
+import * as https from "https";
+// axios.defaults.baseURL = itmConfig.base_url;
+// axios.defaults.headers.common['Content-Type'] = 'application/json'
 
-async function useAxios(props: {
+export async function useAxios(props: {
   url: string;
-  data: unknown;
-  method: Method;
-  token: string | undefined;
-}) {
-  const { token, url, data, method } = props;
-  console.log(props);
-  
-  axios.defaults.baseURL = itmConfig.base_url;
-  axios.defaults.headers.common["Content-Type"] = "application/json";
-  axios.defaults.headers.common["Content-Length"] = 0;
-
-  if (token) axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-  axios.defaults.proxy = {
-    protocol: "http",
-    host: "proxy.hq.corp.mmk.chel.su",
-    port: 8080,
-    auth: `${mmkConfig.mmk_login}:${mmkConfig.mmk_password}` as unknown as AxiosBasicCredentials,
-  };
-
-  
-  return await axios({ url, data, method });
-}
-
-export async function fetchDataAuth(props: {
-  url: string;
-  data: Object;
-  method: Method;
+  data?: any;
+  method: any | Method;
   token: string | undefined;
 }) {
   try {
-    return await useAxios(props);
-  } catch (error: any) {
-    console.log(error);
-  }
-}
+    const { token } = props;
 
-export async function fetchData(props: {
-  url: string;
-  data: Object;
-  method: Method;
-  token: string | undefined;
-}) {
-  try {
-    return await useAxios(props);
+    if (token) axios.defaults.headers.common["apiKey"] = token;
+
+    const agent = new https.Agent({
+      rejectUnauthorized: false,
+    });
+
+    console.log(props);
+    
+
+    const test = await axios(
+      'https://itm-dev.satellite-soft/api/v2/external/security', 
+      {
+        data: props.data,
+        method: props.method,
+        // url: props.url,
+        proxy: {
+          protocol: "http",
+          host: "proxy.hq.corp.mmk.chel.su",
+          port: 8080,
+          auth: {
+            username: "shinkarenko184184",
+            password: "Pasha007!!!!!",
+          } as any,
+        },
+        httpsAgent: agent,
+      } 
+    );
+
+    console.log(test);
   } catch (error: any) {
     console.log(error);
   }
