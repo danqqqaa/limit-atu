@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { integer, pgEnum, pgTable, serial, timestamp, varchar, boolean } from "drizzle-orm/pg-core";
 
 export const user = pgTable("users", {
@@ -26,8 +27,7 @@ export const limit = pgTable("limit", {
   month: integer("month"),
   used: integer("used"),
   limit: integer("limit"),
-  subdivisionId: integer("subdivision_id").references(() => subdivision.id),
-  mvzId: integer("mvz_id").references(() => mvz.id),
+  mvzToSubdivisionToCounterpartyId: integer("mvzToSubdivisionToCounterparty_id").references(() => mvzToSubdivisionToCounterparty.id),
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
@@ -62,6 +62,10 @@ export const subdivision = pgTable("subdivision", {
   contractorAccountUntil: timestamp("contractorAccountUntil"),
   displayName: varchar("displayName"),
 });
+
+export const subdivisionRelations = relations(subdivision, ({ many }) => ({
+  subdivisionToCounterparty: many(subdivisionToCounterparty),
+}));
 // |id|?int||
 // |positionNumber|?int|Порядковый номер строки для отображения в комбобоксе|
 // |type|array||
@@ -92,6 +96,43 @@ export const subdivision = pgTable("subdivision", {
 // |contractorAccountUntil|DateTime||
 // |displayName|string|Вариант представления в строчном виде      * |
 
+
+export const counterparty = pgTable("counterparty", {
+  id: serial("id").primaryKey(),
+  name: varchar("name"),
+});
+
+export const counterpartyRelations = relations(counterparty, ({ many }) => ({
+  subdivisionToCounterparty: many(subdivisionToCounterparty),
+}));
+
+export const subdivisionToCounterparty = pgTable(
+  'subdivision_to_counterparty',
+  {
+    id: serial("id").primaryKey(),
+    subdivisionId: integer('subdivision_id')
+      .notNull()
+      .references(() => subdivision.id),
+      counterpartyId: integer('counterparty_id')
+      .notNull()
+      .references(() => counterparty.id),
+  },
+  // (t) => [
+	// 	primaryKey({ columns: [t.subdivisionId, t.counterpartyId] })
+	// ],
+);
+
+export const subdivisionToCounterpartyRelations = relations(subdivisionToCounterparty, ({ one }) => ({
+  subdivision: one(subdivision, {
+    fields: [subdivisionToCounterparty.subdivisionId],
+    references: [subdivision.id],
+  }),
+  counterparty: one(counterparty, {
+    fields: [subdivisionToCounterparty.counterpartyId],
+    references: [counterparty.id],
+  }),
+}));
+
 export const mvz = pgTable("mvz", {
   id: serial("id").primaryKey(),
   positionNumber: integer("positionNumber"),
@@ -110,3 +151,33 @@ export const mvz = pgTable("mvz", {
 // |createdAt|Не описано|Дата создания записи      * |
 // |updatedAt|Не описано|Дата обновления|
 // |displayName|string|Вариант представления в строчном виде      * |
+export const mvzRelations = relations(mvz, ({ many }) => ({
+  mvzToSubdivisionToCounterparty: many(mvzToSubdivisionToCounterparty),
+}));
+
+export const mvzToSubdivisionToCounterparty = pgTable(
+  'mvz_to_subdivisionToCounterparty',
+  {
+    id: serial("id").primaryKey(),
+    mvzId: integer('mvz_id')
+      .notNull()
+      .references(() => mvz.id),
+      subdivisionToCounterpartyId: integer('subdivisionToCounterparty_id')
+      .notNull()
+      .references(() => subdivisionToCounterparty.id),
+  },
+  // (t) => [
+	// 	primaryKey({ columns: [t.subdivisionId, t.counterpartyId] })
+	// ],
+);
+
+export const mvzToSubdivisionToCounterpartyRelations = relations(mvzToSubdivisionToCounterparty, ({ one }) => ({
+  mvz: one(mvz, {
+    fields: [mvzToSubdivisionToCounterparty.mvzId],
+    references: [mvz.id],
+  }),
+  subdivisionToCounterparty: one(subdivisionToCounterparty, {
+    fields: [mvzToSubdivisionToCounterparty.subdivisionToCounterpartyId],
+    references: [subdivisionToCounterparty.id],
+  }),
+}));
