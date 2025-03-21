@@ -21,15 +21,16 @@ const props = defineProps<{
 }>()
 
 const limitForm = ref({
-  limit: ''
+  limitMileage: '',
+  limitTime: ''
 })
 
 const onSubmitLimit = () => {
 
-    trpc.limit.updateLimit.query({ id: props.data.id, limit: limitForm.value.limit }),
+  trpc.limit.updateLimit.query({ id: props.data.id, limitMileage: limitForm.value.limitMileage, limitTime: limitForm.value.limitTime }),
 
 
-  console.log('Form submitted!', limitForm.value.limit)
+    console.log('Form submitted!', limitForm.value.limitMileage, limitForm.value.limitTime)
 }
 </script>
 
@@ -45,8 +46,10 @@ const onSubmitLimit = () => {
       </DialogHeader>
       <div class="grid gap-4 py-4">
         <div class="grid grid-cols-4 items-center gap-4">
-          <Label for="name" class="text-right">Лимит</Label>
-          <Input type="number" id="limit" class="col-span-3" v-model="limitForm.limit" />
+          <Label for="name" class="text-right">Лимит в км.</Label>
+          <Input type="number" class="col-span-3" v-model="limitForm.limitMileage" />
+          <Label for="name" class="text-right">Лимит в мин.</Label>
+          <Input type="number" class="col-span-3" v-model="limitForm.limitTime" />
         </div>
         <!-- <div class="grid grid-cols-4 items-center gap-4">
           <Label for="username" class="text-right">

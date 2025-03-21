@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, pgEnum, pgTable, serial, timestamp, varchar, boolean } from "drizzle-orm/pg-core";
+import { doublePrecision, integer, pgEnum, pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const user = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -21,163 +21,111 @@ export const userCredentials = pgTable('userCredentials', {
   updated_at: timestamp("updated_at").defaultNow(),
 })
 
-export const limit = pgTable("limit", {
+export const limit = pgTable("limit", { // лимит, создаваемый каждый месяц на каждый costCenterToPairId
   id: serial("id").primaryKey(),
   year: integer("year"),
   month: integer("month"),
-  used: integer("used"),
-  limit: integer("limit"),
-  mvzToSubdivisionToCounterpartyId: integer("mvzToSubdivisionToCounterparty_id").references(() => mvzToSubdivisionToCounterparty.id),
+  usedMileage: doublePrecision("usedMileage").default(0), //в км
+  limitMileage: doublePrecision("limitMileage").default(0),
+  usedTime: doublePrecision("usedTime").default(0), //в мин
+  limitTime: doublePrecision("limitTime").default(0),
+  userCostCenterRequestLimitId: integer("userCostCenterRequestLimit_id").references(() => costCenterToSubdivisionToCounterparty.id),
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
-export const subdivision = pgTable("subdivision", {
-  id: serial("id").primaryKey(),
-  positionNumber: integer("positionNumber"),
-  type: varchar("type"),
-  status: integer("status"),
+export const transportation = pgTable("transportation", { // получаемые заявки 2.
+  id: integer("id").primaryKey(),
+  executedStartedAt: timestamp("executedStartedAt"),
+  executedEndedAt: timestamp("executedEndedAt"),
+  userCostCenterRequestLimitId: integer("userCostCenterRequestLimit_id").references(() => costCenterToSubdivisionToCounterparty.id),
+  totalMileage: doublePrecision("totalMileage"),
+  zeroMileage: doublePrecision("zeroMileage"),
+  loadedMileage: doublePrecision("loadedMileage"),
+  unloadedMileage: doublePrecision("unloadedMileage"),
+  loadingUnloadingTime: doublePrecision("loadingUnloadingTime"),
+  travelTime: doublePrecision("travelTime"),
+});
+
+export const subdivision = pgTable("subdivision", { // подразделение 1.2 
+  id: integer("id").primaryKey(),
+  externalId: varchar("externalId"),
   name: varchar("name"),
-  description: timestamp("description"),
-  shortName: varchar("shortName"),
-  address: varchar("address"),
-  longitude: varchar("longitude"),
-  latitude: varchar("latitude"),
-  allowedRequest: boolean("allowedRequest"),
-  inn: integer("inn"),
-  reasonCode: integer("reasonCode"),
-  linkedUsers: varchar("linkedUsers"),
-  phoneNumber: varchar("phoneNumber"),
-  email: varchar("email"),
-  directorName: varchar("directorName"),
-  responsiblePerson: varchar("responsiblePerson"),
-  additionalPhoneNumber: varchar("additionalPhoneNumber"),
-  createdAt: timestamp("createdAt"),
-  updatedAt: timestamp("updatedAt"),
-  code: varchar("code"),
-  canDelete: boolean("canDelete"),
-  customerAccountStatus: varchar("customerAccountStatus"),
-  customerAccountActive: boolean("customerAccountActive"),
-  contractorAccountStatus: varchar("contractorAccountStatus"),
-  contractorAccountActive: boolean("contractorAccountActive"),
-  contractorAccountUntil: timestamp("contractorAccountUntil"),
-  displayName: varchar("displayName"),
 });
 
 export const subdivisionRelations = relations(subdivision, ({ many }) => ({
-  subdivisionToCounterparty: many(subdivisionToCounterparty),
+  subdivisionToContractor: many(subdivisionToContractor),
 }));
-// |id|?int||
-// |positionNumber|?int|Порядковый номер строки для отображения в комбобоксе|
-// |type|array||
-// |status|int|Статусы участников перевозок|
-// |name|?string|Наименование|
-// |description|?string|Описание|
-// |shortName|?string|Краткое наименование|
-// |address|?string|Адрес|
-// |longitude|?string|Долгота|
-// |latitude|?string|Широта|
-// |allowedRequest|bool|Доступно ли участнику создавать запросы на перевозку|
-// |inn|?int||
-// |reasonCode|?int||
-// |linkedUsers|array<int>||
-// |phoneNumber|?string||
-// |email|?string||
-// |directorName|?string||
-// |responsiblePerson|?string||
-// |additionalPhoneNumber|?string||
-// |createdAt|Не описано|Дата создания записи      * |
-// |updatedAt|Не описано|Дата обновления|
-// |code|string||
-// |canDelete|bool||
-// |customerAccountStatus|string||
-// |customerAccountActive|bool||
-// |contractorAccountStatus|string||
-// |contractorAccountActive|bool||
-// |contractorAccountUntil|DateTime||
-// |displayName|string|Вариант представления в строчном виде      * |
 
 
-export const counterparty = pgTable("counterparty", {
-  id: serial("id").primaryKey(),
+export const contractor = pgTable("contractor", { // контрагенты 1.1
+  id: integer("id").primaryKey(),
   name: varchar("name"),
 });
 
-export const counterpartyRelations = relations(counterparty, ({ many }) => ({
-  subdivisionToCounterparty: many(subdivisionToCounterparty),
+export const contractorRelations = relations(contractor, ({ many }) => ({
+  subdivisionToContractor: many(subdivisionToContractor),
 }));
 
-export const subdivisionToCounterparty = pgTable(
-  'subdivision_to_counterparty',
+export const subdivisionToContractor = pgTable( // пары контрагент+подразделение 1.3
+  'subdivision_to_contractor',
   {
-    id: serial("id").primaryKey(),
+    id: integer("id").primaryKey(),
     subdivisionId: integer('subdivision_id')
       .notNull()
       .references(() => subdivision.id),
-      counterpartyId: integer('counterparty_id')
+    contractorId: integer('contractor_id')
       .notNull()
-      .references(() => counterparty.id),
+      .references(() => contractor.id),
   },
   // (t) => [
-	// 	primaryKey({ columns: [t.subdivisionId, t.counterpartyId] })
-	// ],
+  // 	primaryKey({ columns: [t.subdivisionId, t.counterpartyId] })
+  // ],
 );
 
-export const subdivisionToCounterpartyRelations = relations(subdivisionToCounterparty, ({ one }) => ({
+export const subdivisionToCounterpartyRelations = relations(subdivisionToContractor, ({ one }) => ({
   subdivision: one(subdivision, {
-    fields: [subdivisionToCounterparty.subdivisionId],
+    fields: [subdivisionToContractor.subdivisionId],
     references: [subdivision.id],
   }),
-  counterparty: one(counterparty, {
-    fields: [subdivisionToCounterparty.counterpartyId],
-    references: [counterparty.id],
+  counterparty: one(contractor, {
+    fields: [subdivisionToContractor.contractorId],
+    references: [contractor.id],
   }),
 }));
 
-export const mvz = pgTable("mvz", {
-  id: serial("id").primaryKey(),
-  positionNumber: integer("positionNumber"),
-  transportationParticipant: integer("transportationParticipant"),
+export const costCenter = pgTable("costCenter", { //мвз 1.4
+  id: integer("id").primaryKey(),
+  externalId: varchar("externalId"),
   name: varchar("name"),
-  description: varchar("description"),
-  createdAt: timestamp("createdAt"),
-  updatedAt: timestamp("updatedAt"),
-  displayName: varchar("displayName")
 });
-// |id|?int||
-// |positionNumber|?int|Порядковый номер строки для отображения в комбобоксе|
-// |transportationParticipant|int|Участники перевозок|
-// |name|string|Наименование МВЗ|
-// |description|?string|Описание МВЗ|
-// |createdAt|Не описано|Дата создания записи      * |
-// |updatedAt|Не описано|Дата обновления|
-// |displayName|string|Вариант представления в строчном виде      * |
-export const mvzRelations = relations(mvz, ({ many }) => ({
-  mvzToSubdivisionToCounterparty: many(mvzToSubdivisionToCounterparty),
+
+export const costCenterRelations = relations(costCenter, ({ many }) => ({
+  costCenterToSubdivisionToCounterparty: many(costCenterToSubdivisionToCounterparty),
 }));
 
-export const mvzToSubdivisionToCounterparty = pgTable(
-  'mvz_to_subdivisionToCounterparty',
+export const costCenterToSubdivisionToCounterparty = pgTable( // пары контрагент+подразделение и мвз 1.5
+  'costCenter_to_subdivisionToCounterparty',
   {
-    id: serial("id").primaryKey(),
-    mvzId: integer('mvz_id')
+    id: integer("id").primaryKey(),
+    costCenterId: integer('costCenter_id')
       .notNull()
-      .references(() => mvz.id),
-      subdivisionToCounterpartyId: integer('subdivisionToCounterparty_id')
+      .references(() => costCenter.id),
+    subdivisionToContractorId: integer('subdivisionToContractor_id')
       .notNull()
-      .references(() => subdivisionToCounterparty.id),
+      .references(() => subdivisionToContractor.id),
   },
   // (t) => [
-	// 	primaryKey({ columns: [t.subdivisionId, t.counterpartyId] })
-	// ],
+  // 	primaryKey({ columns: [t.subdivisionId, t.counterpartyId] })
+  // ],
 );
 
-export const mvzToSubdivisionToCounterpartyRelations = relations(mvzToSubdivisionToCounterparty, ({ one }) => ({
-  mvz: one(mvz, {
-    fields: [mvzToSubdivisionToCounterparty.mvzId],
-    references: [mvz.id],
+export const costCenterToSubdivisionToCounterpartyRelations = relations(costCenterToSubdivisionToCounterparty, ({ one }) => ({
+  costCenter: one(costCenter, {
+    fields: [costCenterToSubdivisionToCounterparty.costCenterId],
+    references: [costCenter.id],
   }),
-  subdivisionToCounterparty: one(subdivisionToCounterparty, {
-    fields: [mvzToSubdivisionToCounterparty.subdivisionToCounterpartyId],
-    references: [subdivisionToCounterparty.id],
+  subdivisionToContractor: one(subdivisionToContractor, {
+    fields: [costCenterToSubdivisionToCounterparty.subdivisionToContractorId],
+    references: [subdivisionToContractor.id],
   }),
 }));

@@ -1,9 +1,15 @@
-import { db,  eq,  limit } from "db-limit";
-
+import { and, db, eq, limit } from "db-limit";
+// eq,
 export class LimitService {
-  public async getLimits(): Promise<unknown> {
+  // получение лимитов за месяц и год (фильтр)
+  public async getLimits(opts: any): Promise<unknown> {
     try {
-      const limits = await db.select().from(limit);
+      const { year, month } = opts;
+      const limits = await db.select().from(limit).where(
+        and(
+          eq(limit.month, month),
+          eq(limit.year, year)
+        ));
       return limits;
     } catch (error) {
       // console.log(error.message);
@@ -11,9 +17,9 @@ export class LimitService {
   }
 
   public async updateLimit(data: any) {
-    console.log(123, data.rawInput)
+    console.log(data)
     await db.update(limit)
-      .set({ limit: data.rawInput.limit })
+      .set({ limitMileage: data.rawInput.limitMileage, limitTime: data.rawInput.limitTime })
       .where(eq(limit.id, data.rawInput.id));
   }
 }
