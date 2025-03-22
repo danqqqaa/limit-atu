@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import LimitDialog from '../components/LimitDialog.vue'
-import { useTRPC } from '@/shared/composables/use-trpc'
-import { useQuery } from '@tanstack/vue-query'
+
 import {
   Table,
   TableBody,
@@ -11,16 +10,18 @@ import {
   TableHeader,
   TableRow
 } from '@/shared/components/ui/table'
+import { useLimitStore } from '@/shared/stores/limit/limit-store'
+import { computed } from 'vue'
 
+const store  = useLimitStore()
 
-const trpc = useTRPC()
-function getLimits() {
-  return useQuery({
-    queryFn: () => trpc.limit.getLimits.query(),
-    queryKey: ['limits']
-  })
-}
-const { data } = getLimits()
+const limitsData = computed(() => store.$state.limitsData.data);
+console.log(limitsData)
+const today = new Date();
+const month = today.getMonth();
+const year = today.getFullYear();
+const params = { year: year, month: month };
+store.requestLimits(params);
 </script>
 
 <template>
@@ -40,7 +41,8 @@ const { data } = getLimits()
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="d in data" :key="d.id">
+        
+        <TableRow v-for="d in limitsData" :key="d.id">
           <TableCell class="font-medium">
             {{ d.id }}
           </TableCell>

@@ -4,7 +4,24 @@ export class LimitService {
   // получение лимитов за месяц и год (фильтр)
   public async getLimits(opts: any): Promise<unknown> {
     try {
-      const { year, month } = opts;
+      const { year, month } = opts.rawInput;
+      const limits = await db.select().from(limit)
+      .where(
+        and(
+          eq(limit.month, month),
+          eq(limit.year, year)
+        ));
+      return limits;
+    } catch (error: any) {
+      // console.log(error.message);
+    }
+  }
+
+  public async getLimitsCurrentMonth(): Promise<unknown> { // внеший апи для отдачи лимитов текущего месяца
+    try {
+      const today = new Date();
+      const month = today.getMonth();
+      const year = today.getFullYear();
       const limits = await db.select().from(limit).where(
         and(
           eq(limit.month, month),

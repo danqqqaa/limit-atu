@@ -11,27 +11,38 @@ import {
 } from '@/shared/components/ui/dialog'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
-import { ref } from 'vue'
-import { useQuery } from '@tanstack/vue-query'
-import { useTRPC } from '@/shared/composables/use-trpc'
+import { computed, onMounted, ref } from 'vue'
+import { useLimitStore } from '@/shared/stores/limit/limit-store'
+import { useMutation } from '@tanstack/vue-query'
 
-const trpc = useTRPC()
+const store = useLimitStore()
+
 const props = defineProps<{
   data?: any
 }>()
+// const today = new Date();
+// const month = today.getMonth();
+// const year = today.getFullYear();
+// const params = { year: year, month: month };
 
 const limitForm = ref({
   limitMileage: '',
   limitTime: ''
 })
+// const getLimits = computed(() => {
+//   console.log(123)
+//   return store.requestLimits(params);
+// })
+
 
 const onSubmitLimit = () => {
-
-  trpc.limit.updateLimit.query({ id: props.data.id, limitMileage: limitForm.value.limitMileage, limitTime: limitForm.value.limitTime }),
-
-
-    console.log('Form submitted!', limitForm.value.limitMileage, limitForm.value.limitTime)
+  store.updateLimit({ id: props.data.id, limitMileage: limitForm.value.limitMileage, limitTime: limitForm.value.limitTime });
+  console.log('Form submitted!', limitForm.value.limitMileage, limitForm.value.limitTime)
 }
+onMounted(() => {
+  limitForm.value.limitMileage = props.data.limitMileage
+  limitForm.value.limitTime = props.data.limitTime
+})
 </script>
 
 <template>
