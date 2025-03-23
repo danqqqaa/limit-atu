@@ -11,17 +11,16 @@ import {
   TableRow
 } from '@/shared/components/ui/table'
 import { useLimitStore } from '@/shared/stores/limit/limit-store'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const store  = useLimitStore()
-
-const limitsData = computed(() => store.$state.limitsData.data);
-console.log(limitsData)
+const limitsData = computed(() => store.$state.limitsData);
 const today = new Date();
 const month = today.getMonth();
 const year = today.getFullYear();
 const params = { year: year, month: month };
 store.requestLimits(params);
+
 </script>
 
 <template>
@@ -53,7 +52,7 @@ store.requestLimits(params);
           <TableCell>{{ d.usedTime }}</TableCell>
           <TableCell>{{ d.limitTime }}</TableCell>
           <TableCell class="text-right">
-            <LimitDialog :data="d" />
+            <LimitDialog :data="d"/>
           </TableCell>
         </TableRow>
       </TableBody>

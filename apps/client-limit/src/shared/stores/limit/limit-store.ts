@@ -1,5 +1,4 @@
 import { useTRPC } from '@/shared/composables/use-trpc'
-import { useQuery } from '@tanstack/vue-query'
 import { defineStore } from 'pinia'
 
 export const useLimitStore = defineStore('limit', {
@@ -8,11 +7,14 @@ export const useLimitStore = defineStore('limit', {
     }),
     actions: {
         async requestLimits(params: any) {
-            this.limitsData = await useQuery({
-                queryFn: () => useTRPC().limit.getLimits.query(params),
-                queryKey: ['limits', params],
-            })
+            this.limitsData = await useTRPC().limit.getLimits.query(params);
         },
+
+        // await useQuery({
+        //     queryFn: () => useTRPC().limit.getLimits.query(params),
+        //     queryKey: ['limits', params],
+        // })
+
         async updateLimit(params: any) {
             await useTRPC().limit.updateLimit.query(params)
         }

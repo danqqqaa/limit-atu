@@ -13,31 +13,27 @@ import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
 import { computed, onMounted, ref } from 'vue'
 import { useLimitStore } from '@/shared/stores/limit/limit-store'
-import { useMutation } from '@tanstack/vue-query'
 
 const store = useLimitStore()
 
 const props = defineProps<{
-  data?: any
+  data?: any,
 }>()
-// const today = new Date();
-// const month = today.getMonth();
-// const year = today.getFullYear();
-// const params = { year: year, month: month };
 
+const today = new Date();
+const month = today.getMonth();
+const year = today.getFullYear();
+const params = { year: year, month: month };
+const isDialogOpen = ref(false)
 const limitForm = ref({
   limitMileage: '',
   limitTime: ''
 })
-// const getLimits = computed(() => {
-//   console.log(123)
-//   return store.requestLimits(params);
-// })
-
-
-const onSubmitLimit = () => {
-  store.updateLimit({ id: props.data.id, limitMileage: limitForm.value.limitMileage, limitTime: limitForm.value.limitTime });
+const onSubmitLimit = async () => {
+  await store.updateLimit({ id: props.data.id, limitMileage: limitForm.value.limitMileage, limitTime: limitForm.value.limitTime });
   console.log('Form submitted!', limitForm.value.limitMileage, limitForm.value.limitTime)
+  await store.requestLimits(params)
+  isDialogOpen.value = false
 }
 onMounted(() => {
   limitForm.value.limitMileage = props.data.limitMileage
@@ -46,7 +42,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Dialog>
+  <Dialog :open="isDialogOpen" @update:open="isDialogOpen = $event">
     <DialogTrigger as-child>
       <Button variant="outline">Редактировать лимит</Button>
     </DialogTrigger>
